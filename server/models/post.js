@@ -6,13 +6,21 @@ var PostModel = function(sequelize, DataTypes) {
       type: DataTypes.TEXT,
     },
     up: {
-      type: DataTypes.INTEGER.UNASSIGNED
+      type: DataTypes.INTEGER.UNSIGNED,
+      default: 0
     },
     down: {
-      type: DataTypes.INTEGER.UNASSIGNED
+      type: DataTypes.INTEGER.UNSIGNED,
+      default: 0
     },
     hotness: {
-      type: DataTypes.INTEGER.UNASSIGNED
+      type: DataTypes.INTEGER.UNSIGNED,
+    },
+    lat: {
+      type: DataTypes.FLOAT(9,6),
+    },
+    lng: {
+      type: DataTypes.FLOAT(9,6),
     }
   }, {
     timestamps: true,
@@ -22,6 +30,7 @@ var PostModel = function(sequelize, DataTypes) {
         Post.belongsTo(models.city);
         Post.hasMany(models.comment);
         Post.hasMany(models.file);
+        Post.hasMany(models.like);
       }
     }
     // instanceMethods: {}

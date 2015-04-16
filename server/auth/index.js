@@ -20,8 +20,7 @@ var init = function(User) {
     });
   });
 
-  // Setup Passport strategies
-  localStrategy(User);
+  localStrategy(User); // Setup Passport strategies
 };
 
 /**
@@ -31,30 +30,30 @@ var isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
+
   res.redirect('/login');
-  
 };
 
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
-var hasRole = function(roleRequired) {
-  if (!roleRequired) {
-    throw new Error('Required role needs to be set');
-  }
+// var hasRole = function(roleRequired) {
+//   if (!roleRequired) {
+//     throw new Error('Required role needs to be set');
+//   }
 
-  function meetsRequirements(req, res, next) {
-    if (secrets.userRoles.indexOf(req.user.role) >= secrets.userRoles.indexOf(roleRequired)) {
-      next();
-    } else {
-      res.redirect('/login');
-    }
-  }
-  return meetsRequirements;
-};
+//   function meetsRequirements(req, res, next) {
+//     if (secrets.userRoles.indexOf(req.user.role) >= secrets.userRoles.indexOf(roleRequired)) {
+//       next();
+//     } else {
+//       res.redirect('/login');
+//     }
+//   }
+//   return meetsRequirements;
+// };
 
 module.exports = {
   init: init,
   isAuthenticated: isAuthenticated,
-  hasRole: hasRole,
+  // hasRole: hasRole,
 };

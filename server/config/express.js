@@ -3,6 +3,7 @@
  */
 'use strict';
 
+var sequelize = require('sequelize');
 var compress = require('compression');
 var favicon = require('serve-favicon');
 var bodyParser = require('body-parser');
@@ -15,7 +16,9 @@ var flash = require('express-flash');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var auth = require('../auth');
-var session = require('express-session');
+var session = require('express-session'),
+    MemcachedStore = require('connect-memcached')(session);
+
 
 // Configuration files
 var secrets = require('./secrets');
@@ -85,11 +88,15 @@ var expressConfig = function(app, express, db) {
   app.use(session({
     secret: secrets.sessionSecret,
     saveUninitialized: true,
-    resave: true,
+    resave: false,
     cookie: {
+      secure: false,
       httpOnly: true, // Only server can manipulate cookies
-      maxAge: day
-    }
+      maxAge: 2419200000
+    },
+    store: new MemcachedStore({
+      hosts:['127.0.0.1:11211']
+    })
   }));
 
   // Initialize Authentication
@@ -108,7 +115,43 @@ var expressConfig = function(app, express, db) {
     res.locals.env = env;
     // Make user object available in templates.
     res.locals.user = req.user;
-    next();
+
+    res.locals.geo = {};
+
+    if (typeof req.cookies.lat === 'undefined') {
+      res.locals.geo = null;
+      next(); // No geo
+    } else if (typeof req.cookies.city === 'undefined') {
+      db.sequelize.query('SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance FROM cities HAVING distance < 25 ORDER BY distance LIMIT 1;', 
+        { replacements: { lat: req.cookies.lat, lng: req.cookies.lng, distance: 60}, type: sequelize.QueryTypes.SELECT }
+      ).then(function(data) {
+        data = data[0];
+        
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+            if (key === 'id') {
+              res.locals.geo['cityId'] = data[key];
+              res.cookie('cityId', data[key], {maxAge: 2419200000, httpOnly: false});
+            } else {
+              res.locals.geo[key] = data[key];
+              res.cookie(key, data[key], {maxAge: 2419200000, httpOnly: false});
+            }
+          }
+        }
+
+        next();
+      });
+    } else {
+      var data = req.cookies;
+
+      for (var key in data) {
+        if (data.hasOwnProperty(key) && key !== 'id') {
+          res.locals.geo[key] = data[key];
+        }
+      }
+
+      next();
+    }
   });
 
   /**

@@ -17,6 +17,16 @@ var UserModel = function(sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING
     },
+    lat: {
+      type: DataTypes.FLOAT(9,6),
+      default: null,
+      allowNull: true,
+    },
+    lng: {
+      type: DataTypes.FLOAT(9,6),
+      default: null,
+      allowNull: true,
+    },
     // Reset token
     resetPasswordToken: DataTypes.STRING,
     resetPasswordExpires: DataTypes.DATE
@@ -25,6 +35,7 @@ var UserModel = function(sequelize, DataTypes) {
       associate: function(models) {
         User.hasMany(models.post);
         User.hasMany(models.file);
+        User.hasMany(models.like);
         User.belongsTo(models.city);
       }
     },
@@ -34,14 +45,14 @@ var UserModel = function(sequelize, DataTypes) {
           if (err) {
             return done(err);
           }
-          done(null, isMatch);
+          return done(null, isMatch);
         });
       }
     }
   });
 
   // Run before validating any data
-  User.hook('beforeValidate', function(user, done) {
+  User.hook('beforeValidate', function(user, options, done) {
 
     // Check to see if password has changed
     if (!user.changed('password')) {
@@ -53,12 +64,12 @@ var UserModel = function(sequelize, DataTypes) {
       if (err) {
         return done(err);
       }
-
       bcrypt.hash(user.password, salt, null, function(err, hash) {
         if (err) {
           return done(err);
         }
         user.password = hash;
+
         return done(null, user);
       });
     });

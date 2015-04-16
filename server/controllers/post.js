@@ -1,4 +1,8 @@
 'use strict';
+
+var db = require('../config/database');
+var Post = db.post;
+
 var createPost = function (req, res, next) {
   if (!req.body.image && !req.body.text) {
     req.assert('text', 'You must provide some text or an image.').len(10);
@@ -17,25 +21,28 @@ var createPost = function (req, res, next) {
     return res.json([{msg: 'You must be located before adding posts. Share location from the address bar.'}], 500);
   }
 
-  // var post = new Post({
-  //   text: req.body.text,
-  //   image: req.body.image,
-  //   username: res.locals.user.username,
-  //   city: res.locals.geo.city,
-  //   country: res.locals.geo.country,
-  //   continent: res.locals.geo.continet,
-  //   lnglat: [parseFloat(res.locals.geo.lng), parseFloat(res.locals.geo.lat)]
-  // });
+  var post = {
+    text: req.body.text,
+    image: req.body.image,
+    username: res.locals.user.username,
+    cityId: res.locals.user.cityId,
+    userId: res.locals.user.id,
+    lat: parseFloat(res.locals.geo.lat),
+    lng: parseFloat(res.locals.geo.lng)
+  };
 
-  // post.save(function (err, post) {
-  //   if (err) { next(err); }
+  Post.create(post).then(function (post, err) {
+    if (err) {
+      return next(err);
+    }
+    console.log(err);
 
-  //   req.flash('success', {
-  //     msg: 'Post created successfully.'
-  //   });
+    req.flash('success', {
+      msg: 'Post created successfully.'
+    });
 
-  //   return res.json(post);
-  // });
+    return res.json(post);
+  });
 }
 
 var readPost = function (req, res, next) {

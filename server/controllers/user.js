@@ -16,32 +16,43 @@ var User = db.user;
  */
 
 var createAccount = function(req, res, next) {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password must be at least 6 characters long').len(6);
-  req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+  req.assert('username', 'Username must be between 2 - 50 characters long').len(2, 50);
+  req.assert('username', 'Username can only contain the following characters: A-Z, a-z, 0-9, _-').matches(/^[a-z0-9 _-]+$/i);
+  req.assert('password', 'Password must be at least 6 characters long').len(3);
 
-  var errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/signup');
+  var err = req.validationErrors();
+  if (err) {
+    if (req.xhr) {
+      return res.json(errors, 500);
+    } else {
+      req.flash('errors', errors);
+      return res.redirect('/signup');
+    }
   }
 
   var user = {
-    email: req.body.email,
-    password: req.body.password
+    username: req.body.username,
+    password: req.body.password,
+    lat: req.cookies.lat,
+    lng: req.cookies.lng,
+    cityId: req.cookies.cityId
   };
 
   User.find({
     where: {
-      email: req.body.email
+      username: req.body.username
     }
   }).success(function(existingUser) {
     if (existingUser) {
-      req.flash('errors', {
-        msg: 'Account with that email address already exists.'
-      });
-      return res.redirect('/signup');
+      if (req.xhr) {
+        return res.json([{msg: 'That username already exists. Try another.'}], 500);
+      } else {
+        req.flash('errors', {
+          msg: 'That username already exists. Try another.'
+        });
+
+        res.redirect('/signup');
+      }
     }
     User.create(user).success(function(user) {
       req.logIn(user, function(err) {
@@ -79,12 +90,12 @@ var updateProfile = function(req, res, next) {
     return res.redirect('/settings');
   }
 
-  User.find(req.user.id).success(function(user) {
+  db.User.find(req.user.id).success(function(user) {
     user.email = req.body.email || '';
     user.firstName = req.body.firstName || '';
     user.lastName = req.body.lastName || '';
 
-    user.save().success(function() {
+    db.user.save().success(function() {
       req.flash('success', {
         msg: 'Profile information updated.'
       });

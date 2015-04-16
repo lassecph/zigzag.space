@@ -3,6 +3,15 @@ var CommentModel = function(sequelize, DataTypes) {
   var Comment = sequelize.define('comment', {
     text: {
       type: DataTypes.TEXT,
+    },
+    up: {
+      type: DataTypes.INTEGER.UNSIGNED
+    },
+    down: {
+      type: DataTypes.INTEGER.UNSIGNED
+    },
+    hotness: {
+      type: DataTypes.INTEGER.UNSIGNED
     }
   }, {
     timestamps: true,
@@ -11,6 +20,7 @@ var CommentModel = function(sequelize, DataTypes) {
       associate: function(models) {
         Comment.belongsTo(models.user);
         Comment.belongsTo(models.post);
+        Comment.hasMany(models.like);
       }
     },
     // instanceMethods: {},

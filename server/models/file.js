@@ -6,7 +6,7 @@ var FileModel = function(sequelize, DataTypes) {
     },
     type: {
       type: DataTypes.TEXT,
-    },
+    }
   }, {
     timestamps: true,
     classMethods: {

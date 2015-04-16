@@ -3,20 +3,18 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-// Sign in using Email and Password.
-
 var strategy = function(User) {
   passport.use(new LocalStrategy({
-    usernameField: 'email'
+    usernameField: 'username'
   }, function(username, password, done) {
     User.find({
       where: {
-        email: username
+        username: username
       }
     }).success(function(user) {
       if (!user) {
         return done(null, false, {
-          message: 'Invalid email or password.'
+          message: 'Invalid username or password.'
         });
       }
       user.comparePassword(password, function(err, isMatch) {
@@ -24,7 +22,7 @@ var strategy = function(User) {
           return done(null, user);
         } else {
           return done(null, false, {
-            message: 'Invalid email or password.'
+            message: 'Invalid username or password.'
           });
         }
       });

@@ -46,8 +46,7 @@ $(function() {
       type: $(this).attr('method'),
       data: $(this).serializeArray(),
       success: function (data) {
-        window.location.href = '/p/' + data._id;
-        // document.location.reload();
+        window.location.href = '/p/' + data.id;
       },
       error: function (err) {
       },
