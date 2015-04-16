@@ -5,6 +5,15 @@ var PostModel = function(sequelize, DataTypes) {
     text: {
       type: DataTypes.TEXT,
     },
+    up: {
+      type: DataTypes.INTEGER.UNASSIGNED
+    },
+    down: {
+      type: DataTypes.INTEGER.UNASSIGNED
+    },
+    hotness: {
+      type: DataTypes.INTEGER.UNASSIGNED
+    }
   }, {
     timestamps: true,
     classMethods: {
