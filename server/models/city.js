@@ -7,17 +7,14 @@ var CityModel = function(sequelize, DataTypes) {
     country: {
       type: DataTypes.STRING,
     },
-    continent: {
-      type: DataTypes.STRING,
-    },
-    timezone: {
-      type: DataTypes.STRING,
-    },
     lat: {
       type: DataTypes.FLOAT(9,6),
     },
     lng: {
       type: DataTypes.FLOAT(9,6),
+    },
+    altitude: {
+      type: DataTypes.FLOAT(5,1),
     }
   }, {
     timestamps: false,

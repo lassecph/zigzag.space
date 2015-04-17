@@ -16,6 +16,12 @@ var PostModel = function(sequelize, DataTypes) {
     hotness: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
+    // city: {
+    //   type: DataTypes.STRING,
+    // },
+    // country: {
+    //   type: DataTypes.STRING,
+    // },
     lat: {
       type: DataTypes.FLOAT(9,6),
     },

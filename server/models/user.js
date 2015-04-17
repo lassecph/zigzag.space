@@ -17,6 +17,12 @@ var UserModel = function(sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING
     },
+    up: {
+      type: DataTypes.INTEGER
+    },
+    down: {
+      type: DataTypes.INTEGER
+    },
     lat: {
       type: DataTypes.FLOAT(9,6),
       default: null,

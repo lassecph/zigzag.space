@@ -118,17 +118,17 @@ var expressConfig = function(app, express, db) {
 
     res.locals.geo = {};
 
-    if (typeof req.cookies.lat === 'undefined') {
+    if (typeof req.cookies.lat === 'undefined' && typeof req.cookies.lng === 'undefined') {
       res.locals.geo = null;
       next(); // No geo
     } else if (typeof req.cookies.city === 'undefined') {
-      db.sequelize.query('SELECT *, ( 3959 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance FROM cities HAVING distance < 25 ORDER BY distance LIMIT 1;', 
+      db.sequelize.query('SELECT *, ( 6371 * acos( cos( radians(:lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( lat ) ) ) ) AS distance FROM cities HAVING distance < 25 ORDER BY distance LIMIT 1;', 
         { replacements: { lat: req.cookies.lat, lng: req.cookies.lng, distance: 60}, type: sequelize.QueryTypes.SELECT }
       ).then(function(data) {
         data = data[0];
-        
+
         for (var key in data) {
-          if (data.hasOwnProperty(key)) {
+          if (data.hasOwnProperty(key) && key !== 'lat' && key !== 'lng') {
             if (key === 'id') {
               res.locals.geo['cityId'] = data[key];
               res.cookie('cityId', data[key], {maxAge: 2419200000, httpOnly: false});
@@ -139,13 +139,25 @@ var expressConfig = function(app, express, db) {
           }
         }
 
-        next();
+        if (res.locals.user) {
+          var user = res.locals.user;
+          
+          user.updateAttributes({
+            lat: req.cookies.lat,
+            lng: req.cookies.lng,
+            cityId: data['id'],
+          }).success(function() {
+            next();
+          });
+        } else {
+          next();
+        }
       });
     } else {
       var data = req.cookies;
 
       for (var key in data) {
-        if (data.hasOwnProperty(key) && key !== 'id') {
+        if (data.hasOwnProperty(key) && key !== 'id' && key !== 'connect.sid') {
           res.locals.geo[key] = data[key];
         }
       }
