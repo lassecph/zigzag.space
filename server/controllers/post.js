@@ -1,7 +1,11 @@
 'use strict';
 
 var db = require('../config/database');
-var Post = db.post;
+var Post = db.post,
+    User = db.user,
+    File = db.file,
+    City = db.city;
+
 
 var createPost = function (req, res, next) {
   if (!req.body.image && !req.body.text) {
@@ -46,6 +50,13 @@ var createPost = function (req, res, next) {
 }
 
 var readPost = function (req, res, next) {
+  console.log(req.params.id);
+  Post.find({ where: {id: req.params.id}, include: [User, File, City] }).then(function(post) {
+    return res.render(['post/read'], {
+      titel: 'lol',
+      post: post
+    });
+  });
 }
 
 var updatePost = function (req, res, next) {

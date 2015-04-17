@@ -4,11 +4,12 @@
   <main class="post-wrapper">
     <section class="post cf" id="post">
       <div>
+        {{post|json_encode}}
         <header id="post-header" class="post-header">
-          <p>{{post.text}}</p>
+          <p>{{post.text|textToHTML}}</p>
         </header>
         <footer>
-          <p>By: {{post.username}} - {{post.createdAt|date('F jS, Y')}}</p>
+          <p>By: {{post.user.username}} - {{post.createdAt|date('F jS, Y')}}</p>
         </footer>
         <p>{{post.text}}</p>
         <p>{{post.image}}</p>
