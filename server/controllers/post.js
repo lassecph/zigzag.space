@@ -1,6 +1,7 @@
 'use strict';
 
-var db = require('../config/database');
+var db = require('../config/database'),
+    _ = require('lodash');;
 var Post = db.post,
     User = db.user,
     File = db.file,
@@ -35,12 +36,7 @@ var createPost = function (req, res, next) {
     lng: parseFloat(res.locals.geo.lng)
   };
 
-  Post.create(post).then(function (post, err) {
-    if (err) {
-      return next(err);
-    }
-    console.log(err);
-
+  Post.create(post).then(function (post) {
     req.flash('success', {
       msg: 'Post created successfully.'
     });
@@ -50,10 +46,11 @@ var createPost = function (req, res, next) {
 }
 
 var readPost = function (req, res, next) {
-  console.log(req.params.id);
   Post.find({ where: {id: req.params.id}, include: [User, File, City] }).then(function(post) {
+    var titel = _.escape(post.text.replace(/(?:\r\n|\r|\n)/g, '')); // Remove break lines and escape
+
     return res.render(['post/read'], {
-      titel: 'lol',
+      titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
       post: post
     });
   });

@@ -47,6 +47,7 @@
     <script src="/scripts/modals/message.js"></script>
     <script src="/scripts/modals/auth.js"></script>
     <script src="/scripts/modals/post.js"></script>
+    <script src="/scripts/modals/update.js"></script>
     <script src="/scripts/post.js"></script>
     <script src="/scripts/geocookies.js"></script>
     <!-- endbower -->
