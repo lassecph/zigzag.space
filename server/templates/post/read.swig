@@ -17,6 +17,9 @@
           <div class="post-text">
             <p>{{post.text|textToHTML}}</p>
           </div>
+            <div>
+              UP/DOWN
+            </div>
             <footer class="post-meta">
               <p>
                 <span class="post-timeago">{{post|timeAgo}}</span> - 
@@ -34,6 +37,7 @@
       {% endif %}
         <div>
           <div id="comments" class="comments cf">
+            <p class="post-comment-count">Comments ({{post.commentCount}})</p>
             <div id="">
               <form action="/c" method="post" class="main-form">
                 <input type="hidden" name="_csrf" value="{{_csrf}}" />
@@ -44,7 +48,7 @@
             </div>
           <div id="comments-roll" class="comments-roll">
             {% if comments %}
-              {% include 'comment.swig' %}
+              {{comments|renderComment}}
             {% else %}
               <p>No comments yet!</p>
             {% endif %}

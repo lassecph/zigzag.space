@@ -30,6 +30,7 @@ var createPost = function (req, res, next) {
   var post = {
     text: req.body.text,
     image: req.body.image,
+    commentCount: 0,
     username: res.locals.user.username,
     cityId: res.locals.user.cityId,
     userId: res.locals.user.id,
@@ -50,7 +51,12 @@ var readPost = function (req, res, next) {
   Post.find({ where: {id: req.params.id}, include: [User, File, City] }).then(function(post) {
     var titel = _.escape(post.text.replace(/(?:\r\n|\r|\n)/g, '')); // Remove break lines and escape
 
-    Comment.findAll({ where: { postId: req.params.id }, hierarchy: true, include: {model: User, as: 'user'}}).then(function(comments) {
+    Comment.findAll({ 
+      where: { postId: req.params.id }, 
+      hierarchy: true, 
+      include: {model: User, as: 'user'},
+      order: 'hotness DESC'
+    }).then(function(comments) {
       return res.render(['post/read'], {
         titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
         post: post,

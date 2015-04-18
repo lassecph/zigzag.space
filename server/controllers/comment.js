@@ -24,8 +24,9 @@ var createComment = function (req, res, next) {
   };
 
   Comment.create(comment).then(function(comment) {
-    comment = _.assign(comment.dataValues, req.user);
-
+    comment = comment.dataValues;
+    comment.user = req.user;
+    
     return res.render(['post/comment'], {comments:[comment]});
   }, function (err) { 
     return res.json([{msg: 'An error occured.'}], 500);
