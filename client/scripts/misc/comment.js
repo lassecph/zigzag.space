@@ -8,6 +8,7 @@ $(function() {
       type: $(this).attr('method'),
       data: $(this).serializeArray(),
       success: function (data) {
+        $('div#comments-roll').prepend(data);
       },
       error: function (err) {
       },

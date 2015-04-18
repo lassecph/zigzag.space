@@ -2,7 +2,6 @@
   "name": "zigzagspace",
   "version": "0.0.1",
   "dependencies": {
-    "zepto": "~1.1.6",
     "Cookies": "~1.2.1"
   },
   "devDependencies": {}

@@ -18,7 +18,6 @@ var passport = require('passport');
 var auth = require('../auth');
 var session = require('express-session'),
     MemcachedStore = require('connect-memcached')(session);
-// var swig = require('swig');
 var swigConfig = require('../misc/swig.js');
 
 

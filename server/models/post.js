@@ -5,6 +5,10 @@ var PostModel = function(sequelize, DataTypes) {
     text: {
       type: DataTypes.TEXT,
     },
+    commentCount: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      default: 0
+    },
     up: {
       type: DataTypes.INTEGER.UNSIGNED,
       default: 0
@@ -16,16 +20,16 @@ var PostModel = function(sequelize, DataTypes) {
     hotness: {
       type: DataTypes.INTEGER.UNSIGNED,
     },
-    // city: {
-    //   type: DataTypes.STRING,
-    // },
-    // country: {
-    //   type: DataTypes.STRING,
-    // },
-    lat: {
+    postCity: {
+      type: DataTypes.STRING,
+    },
+    postCountry: {
+      type: DataTypes.STRING,
+    },
+    postLat: {
       type: DataTypes.FLOAT(9,6),
     },
-    lng: {
+    postLng: {
       type: DataTypes.FLOAT(9,6),
     }
   }, {

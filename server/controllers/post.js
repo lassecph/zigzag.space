@@ -1,11 +1,12 @@
 'use strict';
 
 var db = require('../config/database'),
-    _ = require('lodash');;
-var Post = db.post,
+    _ = require('lodash'),
+    Post = db.post,
     User = db.user,
     File = db.file,
-    City = db.city;
+    City = db.city,
+    Comment = db.comment;
 
 
 var createPost = function (req, res, next) {
@@ -49,15 +50,49 @@ var readPost = function (req, res, next) {
   Post.find({ where: {id: req.params.id}, include: [User, File, City] }).then(function(post) {
     var titel = _.escape(post.text.replace(/(?:\r\n|\r|\n)/g, '')); // Remove break lines and escape
 
-    return res.render(['post/read'], {
-      titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
-      post: post
+    Comment.findAll({ where: { postId: req.params.id }, hierarchy: true, include: {model: User, as: 'user'}}).then(function(comments) {
+      return res.render(['post/read'], {
+        titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
+        post: post,
+        comments: comments
+      });
     });
+    // 
+    // Comment.findAll({ where: { postId: req.params.id }, hierarchy: false }).then(function(comments) {
+    //   // console.log(comments);
+    //   return res.render(['post/read'], {
+    //     titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
+    //     post: post,
+    //     comments: comments
+    //   });
+    // });
+
+    // Comment.findAll({ 
+    //   where: { postId: req.params.id },
+    //   // include: [{model: Comment, as: 'descendents', hierarchy: true}, {model: User, as: 'user'}]
+    //   // include: {model: Comment, as: 'descendents', hierarchy: true},
+    //   include: [{model: Comment, as: 'children'}, {model: User, as: 'user'}],
+    //   order: [ [ { model: Comment, as: 'children' }, 'hierarchyLevel' ] ]
+    // }).then(function (comments) {
+    //   console.log(comments);
+    //   if (post.deleteAt) {
+    //     return res.render(['post/deleted'], {
+    //       titel: 'Post deleted',
+    //       post: post
+    //     });
+    //   }
+
+    //   return res.render(['post/read'], {
+    //     titel: _.trunc(titel, 50) + ' | ' + post.city.city + ' | ' + post.city.country,
+    //     post: post,
+    //     comments: comments
+    //   });
+    // });
   });
 }
 
 var updatePost = function (req, res, next) {
-  
+  next();
 }
 
 var deletePost = function(req, res, next) {

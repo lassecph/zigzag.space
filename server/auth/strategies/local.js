@@ -1,9 +1,10 @@
 'use strict';
 
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy,
+    RememberMeStrategy = require('passport-remember-me').Strategy;
 
-var strategy = function(User) {
+var strategy = function (User) {
   passport.use(new LocalStrategy({
     usernameField: 'username'
   }, function(username, password, done) {

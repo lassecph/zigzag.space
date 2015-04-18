@@ -39,7 +39,7 @@
     {% if env == 'development' %}
     <!-- build:js(client) scripts/global.js -->
     <!-- bower:js -->
-    <script src="/bower_components/zepto/zepto.js"></script>
+    <script src="/scripts/vendor/zepto.js"></script>
     <script src="/bower_components/Cookies/dist/cookies.js"></script>
     <script src="/scripts/vendor/easymodal.js"></script>
 
@@ -47,9 +47,9 @@
     <script src="/scripts/modals/message.js"></script>
     <script src="/scripts/modals/auth.js"></script>
     <script src="/scripts/modals/post.js"></script>
-    <script src="/scripts/modals/update.js"></script>
-    <script src="/scripts/post.js"></script>
-    <script src="/scripts/geocookies.js"></script>
+    <script src="/scripts/misc/comment.js"></script>
+    <script src="/scripts/misc/delete.js"></script>
+    <script src="/scripts/misc/geocookies.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     {% else %}

@@ -33,8 +33,7 @@ var login = function(req, res) {
  */
 
 var postLogin = function(req, res, next) {
-
-  req.assert('email', 'Please enter a valid email address.').isEmail();
+  // req.assert('email', 'Please enter a valid email address.').isEmail();
 
   // Run validation
   var errors = req.validationErrors();
