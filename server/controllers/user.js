@@ -6,6 +6,24 @@
 
 var db = require('../config/database');
 var User = db.user;
+var City = db.city;
+
+var readUser = function (req, res, next) {
+  if (!req.params.username) {
+    req.flash('errors', {msg: 'No user found.'});
+    return res.redirect('/');
+  }
+
+  User.find({where: {username:req.params.username}, include: [City]}).then(function (account) {
+    return res.render(['account/read'], {
+      titel: account.username,
+      account: account,
+    });
+  }, function (err) {
+    req.flash('errors', {msg: 'An error occurred.'});
+    return res.redirect('/');
+  });
+};
 
 /**
  * POST /user
@@ -170,6 +188,7 @@ var deleteAccount = function(req, res, next) {
 };
 
 module.exports = {
+  readUser: readUser,
   createAccount: createAccount,
   updateProfile: updateProfile,
   updatePassword: updatePassword,

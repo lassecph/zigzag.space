@@ -14,7 +14,7 @@ $(function() {
     var modal = $('#message-modal');
 
     if (type === 'error') {
-      if (typeof message === 'undefined') {
+      if (!message) {
         message = 'Ups, an error has occurred. Try again.';
       }
 
@@ -22,7 +22,7 @@ $(function() {
       modal.addClass('success');
 
     } else {
-      if (typeof message === 'undefined') {
+      if (!message) {
         message = 'Some good just happend. Move along.';
       }
 

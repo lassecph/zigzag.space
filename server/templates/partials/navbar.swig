@@ -9,20 +9,27 @@
     <ul class="nav-list pull-right">
        {% if !user %}
         <li class="nav-item">
-          <a href='/signup' id="auth-modal-link">Signup or login</a>
+          <a href="/signup" id="auth-modal-link">Signup or login</a>
         </li>
       {% else %}
         <li class="nav-item">
-          <a href='/settings' class="create-post-link">Add post</a>
+          <a href="/settings" class="create-post-link">Add post</a>
         </li>
         <li class="nav-item">
-          Hello {{user.username}} ({{user.city}}, {{user.country}})
-        </li>
-        <li class="nav-item">
-          <a href='/settings'>My Account</a>
-        </li>
-        <li class="nav-item">
-          <a href='/logout'>Logout</a>
+          <a href="/" id="header-userdropdown-link">{{user.username}}</a>
+          <div id="header-userdropdown" class="hidden animated">
+            <ul>
+              <li class="nav-item">
+                <a href="/u/{{user.username}}">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a href="/settings">Settings</a>
+              </li>
+              <li class="nav-item">
+                <a href="/logout">Logout</a>
+              </li>
+            </ul>
+          </div>
         </li>
       {% endif %}
     </ul>

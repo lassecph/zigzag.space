@@ -50,6 +50,7 @@
     <script src="/scripts/misc/comment.js"></script>
     <script src="/scripts/misc/delete.js"></script>
     <script src="/scripts/misc/geocookies.js"></script>
+    <script src="/scripts/misc/header.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
     {% else %}

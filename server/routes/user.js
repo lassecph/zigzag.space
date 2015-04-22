@@ -21,6 +21,7 @@ var routes = function(app) {
   // Delete
   app.delete('/user', auth.isAuthenticated, userController.deleteAccount);
 
+  app.get('/u/:username', userController.readUser);
 };
 
 module.exports = routes;

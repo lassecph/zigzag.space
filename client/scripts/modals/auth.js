@@ -39,8 +39,8 @@ $(function() {
   // Move between form tabs
   $('div#auth-modal a').click(function(e) {
     e.preventDefault();
-    $('div#auth-modal .animated').hide().removeClass('bounceIn');
-    $('div#auth-modal .' + $(this).attr('data-form')).show().addClass('bounceIn');
+    $('div#auth-modal .animated').hide().removeClass('fadeIn');
+    $('div#auth-modal .' + $(this).attr('data-form')).show().addClass('fadeIn');
   });
 
   $('div#auth-modal form.signup').submit(function(e) {

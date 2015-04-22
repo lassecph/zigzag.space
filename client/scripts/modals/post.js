@@ -11,7 +11,7 @@ $(function() {
   };
 
   window.openPostModal = function (message ) {
-    if (typeof message === 'undefined') {
+    if (!message) {
       message = 'We are currently loading stuff for you...';
     }
 
